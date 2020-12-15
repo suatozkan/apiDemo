@@ -28,7 +28,6 @@ export default function Get(props) {
         });
   }, [])
 
-
   if (loading) {
     return(
         <View >
