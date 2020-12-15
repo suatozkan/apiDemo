@@ -8,7 +8,8 @@ import { SearchBar } from 'react-native-elements';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default function TabOneScreen(props) {
+//the screen is for first screen that show list of characters..
+export default function ListScreen(props) {
   const { navigation } = props
 
   const [data, setData] = useState(null)
@@ -61,14 +62,11 @@ export default function TabOneScreen(props) {
          onClear={(text) => searchFilterFunction('')}
          placeholder="Type Here..."
          value={search}
-         containerStyle={{width:width-2, borderBottomColor: 'transparent',borderTopColor: 'transparent',backgroundColor:'whitesmoke',borderWidth:0}}
+         containerStyle={styles.searchContainer}
          inputContainerStyle={{backgroundColor:'white'}}
-
-
        />
 
         <FlatList
-
             data={filteredDataSource.slice(0,state)}
             nestedScrollEnabled={true}
             keyExtractor= {(item, index) => item.id}
@@ -81,7 +79,7 @@ export default function TabOneScreen(props) {
                   <View>
                   <Text style={styles.title}>{item.name}</Text>
                   <Image
-                    style={{width:width-30,height:width-30,borderRadius:10}}
+                    style={styles.imageStyle}
                     source={{uri: item.image}} />
                   </View>
                 </TouchableOpacity>
@@ -111,4 +109,16 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  searchContainer:{
+    width:width-2,
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent',
+    backgroundColor:'whitesmoke',
+    borderWidth:0
+  },
+  imageStyle:{
+    width:width-30,
+    height:width-30,
+    borderRadius:10
+  }
 });

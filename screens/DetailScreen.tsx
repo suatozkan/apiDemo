@@ -10,7 +10,7 @@ import Get from '../components/Get'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default function TabTwoScreen(props) {
+export default function DetailScreen(props) {
 
   const popAction = StackActions.pop(1);
   const { route,navigation } = props
@@ -18,40 +18,31 @@ export default function TabTwoScreen(props) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-
       <View style={styles.container}>
-
         <TouchableOpacity
                style={styles.back}
                onPress={()=> navigation.dispatch(popAction)
                }>
              <Text style={styles.text}>Back</Text>
         </TouchableOpacity>
-
         <Text style={styles.title}>{details.name}</Text>
         <Image
-          style={{width:width-30,height:width-30,borderRadius:10,marginTop:20}}
+          style={styles.imageStyle}
           source={{uri: details.image}} />
-        <Text style={styles.text}>{details.species}</Text>
-        <Text style={styles.text}>{details.gender}</Text>
-
+        <View style={styles.rowStyle}>
+          <Text style={styles.text}>{details.species}, </Text>
+          <Text style={styles.text}>{details.gender}</Text>
+        </View>
         <FlatList
-
             data={details.episode}
             nestedScrollEnabled={true}
             keyExtractor= {(item, index) => item}
             renderItem={({item,index}) =>
-
                   <View>
                   <Get item={item} />
-
                   </View>
-
             }
-
-        />
-
-
+       />
       </View>
     </SafeAreaView>
 
@@ -84,4 +75,17 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  rowStyle:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center',
+    margin:5,
+    backgroundColor:'whitesmoke'
+  },
+  imageStyle:{
+    width:width-30,
+    height:width-30,
+    borderRadius:10,
+    marginTop:20
+  }
 });

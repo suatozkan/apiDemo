@@ -5,26 +5,50 @@ import { useEffect, useState } from 'react'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-
+// the component for getting detail about episodes as name, air_date etc..
 export default function Get(props) {
   const { navigation } = props
-
-  const [data, setData] = useState(null)
+  const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const fetchURL = props.item
-  const getData = () =>
-    fetch(`${fetchURL}`).then((res) => res.json())
 
   useEffect(() => {
-    getData().then((data) => setData(data.results))
+
+    fetch(`${fetchURL}`)
+    .then((response) => response.json())
+        .then((data) => {
+          setLoading(false);
+          setData(data);
+
+        })
+        .catch((e) => {
+          setLoading(false);
+          setError('fetch failed');
+        });
   }, [])
-  console.log(data,'wwwwww',props.item)
-
-  return (
-    <View >
 
 
-    <Text>ss</Text>
+  if (loading) {
+    return(
+        <View >
+        <Text>Loading..</Text>
+        </View>
+    )
+   }
 
-    </View>
-  );
+   if (error !== '') {
+     return(
+       <View >
+         <Text>ERROR: {error}</Text>
+       </View>
+     )
+   }
+
+   return (
+     <View style={{backgroundColor:'whitesmoke',width:width-20}} >
+     <Text>{data.name+', '+data.air_date}</Text>
+     </View>
+   );
+
 }
