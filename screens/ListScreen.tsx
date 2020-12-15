@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet,TouchableOpacity, FlatList,Image,Dimensions} from 'react-native';
+import { StyleSheet,TouchableOpacity, FlatList,Image,Dimensions,SafeAreaView} from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import { Text, View } from '../components/Themed';
 import { useEffect, useState } from 'react'
@@ -12,6 +12,7 @@ export default function TabOneScreen(props) {
   const { navigation } = props
 
   const [data, setData] = useState(null)
+  const [state, setState] = useState(3)
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
 
@@ -20,20 +21,21 @@ export default function TabOneScreen(props) {
     fetch(`${fetchURL}`).then((res) => res.json())
 
   useEffect(() => {
-    getData().then((data) => setData(data.results))
+    getData().then((data) => {setData(data.results)
+      setFilteredDataSource(data.results)})
   }, [])
-  console.log(data)
+
 
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
-    if (text) {
+    if (text!==null) {
       // Inserted text is not blank
       // Filter the masterDataSource
       // Update FilteredDataSource
       const newData = data.filter(function (item) {
-        const itemData = item.title
-          ? item.title.toUpperCase()
+        const itemData = item.name
+          ? item.name.toUpperCase()
           : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -49,38 +51,46 @@ export default function TabOneScreen(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
 
-    <SearchBar
-       round
-       searchIcon={{ size: 24 }}
-       onChangeText={(text) => searchFilterFunction(text)}
-       onClear={(text) => searchFilterFunction('')}
-       placeholder="Type Here..."
-       value={search}
-     />
+      <SearchBar
+         round
+         searchIcon={{ size: 24 }}
+         onChangeText={(text) => searchFilterFunction(text)}
+         onClear={(text) => searchFilterFunction('')}
+         placeholder="Type Here..."
+         value={search}
+         containerStyle={{width:width-2, borderBottomColor: 'transparent',borderTopColor: 'transparent',backgroundColor:'whitesmoke',borderWidth:0}}
+         inputContainerStyle={{backgroundColor:'white'}}
 
-      <FlatList
 
-          data={data}
-          nestedScrollEnabled={true}
-          keyExtractor= {(item, index) => item.id}
-          renderItem={({item,index}) =>
-              <TouchableOpacity
-              underlayColor='transparent'
-              onPress={() =>navigation.dispatch(StackActions.push('Detail', {details: item}))}>
-                <View>
-                <Text style={styles.title}>{item.name}</Text>
-                <Image
-                  style={{width:width-30,height:width-30,borderRadius:10}}
-                  source={{uri: item.image}} />
-                </View>
-              </TouchableOpacity>
-          }
+       />
 
-      />
+        <FlatList
 
-    </View>
+            data={filteredDataSource.slice(0,state)}
+            nestedScrollEnabled={true}
+            keyExtractor= {(item, index) => item.id}
+            onEndReached={()=>setState(state+3)}
+            onEndReachedThreshold={0.5}
+            renderItem={({item,index}) =>
+                <TouchableOpacity
+                underlayColor='transparent'
+                onPress={() =>navigation.dispatch(StackActions.push('Detail', {details: item}))}>
+                  <View>
+                  <Text style={styles.title}>{item.name}</Text>
+                  <Image
+                    style={{width:width-30,height:width-30,borderRadius:10}}
+                    source={{uri: item.image}} />
+                  </View>
+                </TouchableOpacity>
+            }
+
+        />
+
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop:20,
+
   },
   title: {
     marginTop:20,
