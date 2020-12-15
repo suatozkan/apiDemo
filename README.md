@@ -13,9 +13,9 @@ Getting images via api(depend on customer) and swipe endless with React Native(r
 
 ## Built With
 
-* [TypeScript]
+* TypeScript
 * [React Navigation](https://reactnavigation.org/)
-* [Hooks]
-* [GraphQL](Apollo client) 
+* Hooks
+* GraphQL(Apollo client) 
 * [Jest](https://jestjs.io/) - Unit test
 
